@@ -1,19 +1,27 @@
-# last edited 10-20-2009
-#-- changelog --
-# * now also processes .bwi
-# * now also processes .img and .nrg files
-# * now does case-insensitive compare on file extention
+# last edited 2010.02.24
 import sys
 import os
 from subprocess import Popen, PIPE
-from win32api import *
-from win32con import *
 
 extToProcess = ['.iso', '.mdf', '.bin', '.img', '.nrg', '.bwi']
 
 def getExePath():
-   key = RegOpenKey(HKEY_LOCAL_MACHINE, r'SOFTWARE\EasyBoot Systems\UltraISO\5.0')
-   return os.path.join(RegQueryValue(key, None), 'UltraISO.exe')
+   try:
+      from win32api import RegOpenKey, RegQueryValue
+      from win32con import HKEY_LOCAL_MACHINE
+      key = RegOpenKey(HKEY_LOCAL_MACHINE, r'SOFTWARE\EasyBoot Systems\UltraISO\5.0')
+      path = RegQueryValue(key, None)
+   except:
+      guesses = [
+            r'C:\Program Files\UltraISO',
+            r'C:\Program Files (x86)\UltraISO',
+      ]
+      for folder in guesses:
+         if os.path.isdir(folder):
+            path = folder
+            break
+
+   return os.path.join(path, 'UltraISO.exe')
 
 def iso2isz(inp, out=None):
    inp = os.path.abspath(inp)
