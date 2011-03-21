@@ -3,7 +3,15 @@ import sys
 import os
 from subprocess import Popen, PIPE
 
-extToProcess = ['.iso', '.mdf', '.bin', '.img', '.nrg', '.bwi']
+extToProcess = [
+   '.iso',
+   '.mdf',
+   '.bin',
+   '.img',
+   '.nrg',
+   '.bwi',
+   '.mdx',
+]
 
 def getExePath():
    try:
